@@ -52,11 +52,11 @@ $ExpectedDriverName = "EPSON WF-2510 Series"
 
 # Enter the expected TCP/IP printer port name.
 
-$ExpectedPortName = "IP_192.0.2.25"
+$ExpectedPortName = "IP_192.168.0.126"
 
 # Enter the printer IP address or DNS name.
 
-$ExpectedPrinterIP = "192.0.2.25"
+$ExpectedPrinterIP = "192.168.0.126"
 
 # Enter the TCP port number used by the printer.
 
