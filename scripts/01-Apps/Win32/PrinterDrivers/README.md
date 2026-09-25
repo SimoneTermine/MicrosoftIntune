@@ -1,9 +1,3 @@
-Ti preparo il contenuto per **`PrinterDrivers/README.md`**, mantenendo struttura, livello di dettaglio e stile inglese del README che mi hai fornito.
-
-Ho utilizzato i tre script che abbiamo preparato, con la **EPSON WF-2510 come esempio pratico**, ma mantenendo il progetto riutilizzabile con altri produttori e modelli. Nel README pubblico utilizzo `192.0.2.25` come indirizzo IP di esempio, evitando di pubblicare quello effettivo del tuo laboratorio.
-
----
-
 # Microsoft Intune: Printer Driver and TCP/IP Printer Deployment (Win32 App + PowerShell)
 
 This folder contains three PowerShell scripts (Installation, Uninstallation, and Detection) to deploy and manage traditional network printers through **Microsoft Intune Win32 apps**, without requiring Microsoft Universal Print.
