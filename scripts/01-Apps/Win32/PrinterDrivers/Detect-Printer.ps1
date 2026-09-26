@@ -42,24 +42,19 @@
 # CUSTOMIZE THIS SECTION
 # ============================================================
 
-# Enter the exact printer name.
-
+#Enter the exact printer name.
 $PrinterName = "IT Floor 1 - EPSON WF-2510"
 
-# Enter the exact printer driver name.
-
+#Enter the exact printer driver name.
 $ExpectedDriverName = "EPSON WF-2510 Series"
 
-# Enter the expected TCP/IP printer port name.
-
+#Enter the expected TCP/IP printer port name.
 $ExpectedPortName = "IP_192.168.0.126"
 
-# Enter the printer IP address or DNS name.
-
+#Enter the printer IP address or DNS name.
 $ExpectedPrinterIP = "192.168.0.126"
 
-# Enter the TCP port number used by the printer.
-
+#Enter the TCP port number used by the printer.
 $ExpectedPortNumber = 9100
 
 
@@ -75,47 +70,38 @@ $Printer = Get-Printer `
     -ErrorAction SilentlyContinue
 
 if ($null -eq $Printer) {
-
     exit 1
-
 }
 
-# Verify the printer driver and port name.
+#Verify the printer driver and port name.
 
 if (
     $Printer.DriverName -ne $ExpectedDriverName -or
     $Printer.PortName -ne $ExpectedPortName
 ) {
-
     exit 1
-
 }
 
-# Check whether the printer port exists.
+#Check whether the printer port exists.
 
 $PrinterPort = Get-PrinterPort `
     -Name $ExpectedPortName `
     -ErrorAction SilentlyContinue
 
 if ($null -eq $PrinterPort) {
-
     exit 1
-
 }
 
-# Verify the printer IP address and TCP port number.
+#Verify the printer IP address and TCP port number.
 
 if (
     $PrinterPort.PrinterHostAddress -ne $ExpectedPrinterIP -or
     $PrinterPort.PortNumber -ne $ExpectedPortNumber
 ) {
-
     exit 1
-
 }
 
-# Printer detected with the expected configuration.
+#Printer detected with the expected configuration.
 
 Write-Output "Detected"
-
 exit 0
