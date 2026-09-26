@@ -78,129 +78,90 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Create the directory used to store uninstallation logs.
-
+#Create the directory used to store uninstallation logs.
 $LogRoot = Join-Path $env:ProgramData "EndpointNinja\PrinterDeployment"
-
 New-Item -Path $LogRoot -ItemType Directory -Force | Out-Null
 
-# Remove invalid filename characters from the printer name.
-
+#Remove invalid filename characters from the printer name.
 $SafePrinterName = ($PrinterName -replace '[\\/:*?"<>|]', '_')
-
 $LogFile = Join-Path $LogRoot "$SafePrinterName-uninstall.log"
 
 $TranscriptStarted = $false
 $ExitCode = 0
 
 try {
-
     Start-Transcript -Path $LogFile -Append | Out-Null
-
     $TranscriptStarted = $true
-
     Write-Output "Starting printer removal: $PrinterName"
 
-    # Check whether the printer queue exists.
-
+    #Check whether the printer queue exists.
     $Printer = Get-Printer `
         -Name $PrinterName `
         -ErrorAction SilentlyContinue
 
     if ($Printer) {
 
-        # Retrieve the associated port if no port was specified.
-
+        #Retrieve the associated port if no port was specified.
         if ([string]::IsNullOrWhiteSpace($PortName)) {
-
             $PortName = $Printer.PortName
-
         }
         elseif ($PortName -ne $Printer.PortName) {
-
             throw "The specified port does not match the printer's configured port. Printer removal cancelled."
-
         }
 
-        # Remove the printer queue.
-
+        #Remove the printer queue.
         Write-Output "Removing printer: $PrinterName"
-
         Remove-Printer `
             -Name $PrinterName `
             -Confirm:$false
-
     }
     else {
-
         Write-Output "Printer not found: $PrinterName"
-
     }
 
-    # Remove the TCP/IP port only when explicitly requested.
-
+    #Remove the TCP/IP port only when explicitly requested.
     if (
         $RemovePort -and
         -not [string]::IsNullOrWhiteSpace($PortName)
     ) {
 
-        # Check whether other printers are using the same port.
-
+        #Check whether other printers are using the same port.
         $PrintersUsingPort = Get-Printer |
             Where-Object {
                 $_.PortName -eq $PortName
             }
 
         if (-not $PrintersUsingPort) {
-
             $Port = Get-PrinterPort `
                 -Name $PortName `
                 -ErrorAction SilentlyContinue
 
             if ($Port) {
-
                 Write-Output "Removing unused printer port: $PortName"
-
                 Remove-PrinterPort `
                     -Name $PortName `
                     -Confirm:$false
-
             }
             else {
-
                 Write-Output "Printer port not found: $PortName"
-
             }
-
         }
         else {
-
             Write-Output "Printer port is still used by other printers: $PortName"
-
             Write-Output "Port removal skipped."
-
         }
-
     }
 
     Write-Output "Printer removal completed successfully."
 
 }
 catch {
-
     Write-Output "ERROR: $($_.Exception.Message)"
-
     $ExitCode = 1
-
 }
 finally {
-
     if ($TranscriptStarted) {
-
         Stop-Transcript | Out-Null
-
     }
-
 }
-
 exit $ExitCode
