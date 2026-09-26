@@ -34,7 +34,7 @@
     The values must match the configuration used by
     Install-Printer.ps1.
 
-    192.0.2.25 is a documentation-only IP address.
+    192.168.0.126 is a documentation-only IP address.
 #>
 
 
@@ -63,8 +63,7 @@ $ExpectedPortNumber = 9100
 # ============================================================
 
 
-# Check whether the printer exists.
-
+#Check whether the printer exists.
 $Printer = Get-Printer `
     -Name $PrinterName `
     -ErrorAction SilentlyContinue
@@ -74,7 +73,6 @@ if ($null -eq $Printer) {
 }
 
 #Verify the printer driver and port name.
-
 if (
     $Printer.DriverName -ne $ExpectedDriverName -or
     $Printer.PortName -ne $ExpectedPortName
@@ -83,7 +81,6 @@ if (
 }
 
 #Check whether the printer port exists.
-
 $PrinterPort = Get-PrinterPort `
     -Name $ExpectedPortName `
     -ErrorAction SilentlyContinue
@@ -93,7 +90,6 @@ if ($null -eq $PrinterPort) {
 }
 
 #Verify the printer IP address and TCP port number.
-
 if (
     $PrinterPort.PrinterHostAddress -ne $ExpectedPrinterIP -or
     $PrinterPort.PortNumber -ne $ExpectedPortNumber
@@ -102,6 +98,5 @@ if (
 }
 
 #Printer detected with the expected configuration.
-
 Write-Output "Detected"
 exit 0
