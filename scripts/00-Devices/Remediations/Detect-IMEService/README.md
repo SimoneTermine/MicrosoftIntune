@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/33458475/README.md)
 # Intune Management Extension service health
 
 ## Purpose
