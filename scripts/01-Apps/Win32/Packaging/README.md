@@ -4,11 +4,11 @@ Get-Win32AppSourceMetadata.ps1 collects installer metadata for Microsoft Intune 
 
 ## Run the script
 
-    .Get-Win32AppSourceMetadata.ps1 -InstallerPath .ContosoApp.msi
+    & (Join-Path $PWD 'Get-Win32AppSourceMetadata.ps1') -InstallerPath (Join-Path $PWD 'ContosoApp.msi')
 
 To save the result as JSON:
 
-    .Get-Win32AppSourceMetadata.ps1 -InstallerPath .ContosoSetup.exe -OutputPath .ContosoSetup-metadata.json
+    & (Join-Path $PWD 'Get-Win32AppSourceMetadata.ps1') -InstallerPath (Join-Path $PWD 'ContosoSetup.exe') -OutputPath (Join-Path $PWD 'ContosoSetup-metadata.json')
 
 For MSI files, the output can include ProductName, ProductVersion, Manufacturer, ProductCode, and UpgradeCode. For EXE files, version fields are read from the file's version resource and may be blank if the vendor did not publish them.
 
