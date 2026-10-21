@@ -12,11 +12,11 @@ It does not delete the backup, reset the catroot2 folder, remove Windows Update 
 
 Open an elevated 64-bit PowerShell session. Preview the operation first:
 
-    ./Reset-WindowsUpdateCache.ps1 -WhatIf
+    & (Join-Path $PWD 'Reset-WindowsUpdateCache.ps1') -WhatIf
 
 When no Windows update is installing and you are ready to proceed:
 
-    ./Reset-WindowsUpdateCache.ps1
+    & (Join-Path $PWD 'Reset-WindowsUpdateCache.ps1')
 
 The script uses PowerShell ShouldProcess with a high confirmation impact. Review the confirmation before allowing the cache rename.
 
