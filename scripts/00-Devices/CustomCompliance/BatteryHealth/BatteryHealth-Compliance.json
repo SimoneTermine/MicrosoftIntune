@@ -1,0 +1,42 @@
+{
+  "Rules": [
+    {
+      "SettingName": "BatteryHealthPercent",
+      "Operator": "GreaterEquals",
+      "DataType": "Double",
+      "Operand": 70,
+      "MoreInfoUrl": "https://learn.microsoft.com/en-us/intune/protect/device-compliance-get-started",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Battery capacity is below the configured minimum",
+          "Description": "The reported full-charge capacity is below 70% of the battery's designed capacity. Contact IT to assess battery replacement."
+        },
+        {
+          "Language": "it_IT",
+          "Title": "La capacità della batteria è inferiore al valore configurato",
+          "Description": "La capacità di carica completa rilevata è inferiore al 70% della capacità di progetto. Contatta l'IT per valutare la sostituzione della batteria."
+        }
+      ]
+    },
+    {
+      "SettingName": "QuerySucceeded",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "MoreInfoUrl": "https://learn.microsoft.com/en-us/intune/protect/device-compliance-get-started",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Battery health could not be read",
+          "Description": "Windows did not return battery capacity data. Sync the device with Intune and contact IT if the issue continues."
+        },
+        {
+          "Language": "it_IT",
+          "Title": "Impossibile leggere lo stato della batteria",
+          "Description": "Windows non ha restituito i dati sulla capacità della batteria. Sincronizza il dispositivo con Intune e contatta l'IT se il problema persiste."
+        }
+      ]
+    }
+  ]
+}
