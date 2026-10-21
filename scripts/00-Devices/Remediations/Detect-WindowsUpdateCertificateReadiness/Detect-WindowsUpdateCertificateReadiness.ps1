@@ -1,6 +1,9 @@
 <#
 .SYNOPSIS
     Checks Windows Update certificate-rotation readiness for the 2027 deadlines.
+    Author: Simone Termine
+    Version: 1.1
+    Blog: https://www.endpointninja.com
 
 .DESCRIPTION
     Read-only Intune Remediations detection script. It compares the installed
@@ -126,8 +129,8 @@ try {
             -RequiredBuild $minimumBuild.ToString() -Deadline $deadline
     }
 
-    # Compliant by the build-based readiness check. Keep stdout empty so that
-    # Intune reports no detected issue for a detection-only package.
+    #Compliant by the build-based readiness check. Keep stdout empty so that
+    #Intune reports no detected issue for a detection-only package.
     exit 0
 }
 catch {
