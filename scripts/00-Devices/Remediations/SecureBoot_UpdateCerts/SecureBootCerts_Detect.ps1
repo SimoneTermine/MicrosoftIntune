@@ -1,3 +1,6 @@
+# Author: Simone Termine
+# Blog: https://www.endpointninja.com
+
 $ErrorActionPreference = 'SilentlyContinue'
 
 $regSB   = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecureBoot'
