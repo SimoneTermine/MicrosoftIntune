@@ -53,6 +53,7 @@ Microsoft's notice excludes devices **receiving updates through WSUS**. The scri
 
 ## References
 
+- [Endpoint Ninja: Windows Update certificate rotation in 2027](https://www.endpointninja.com/endpoint-management/windows-update-certificate-rotation-in-2027)
 - [Microsoft: Prepare for Windows Update certificate rotation in 2027](https://techcommunity.microsoft.com/blog/windows-itpro-blog/prepare-for-windows-update-certificate-rotation-in-2027/4562463)
 - [Microsoft: Intune Remediations](https://learn.microsoft.com/en-us/intune/device-management/tools/deploy-remediations)
 - [Windows 11 July 2026 update, KB5099414](https://support.microsoft.com/en-us/servicing/os/windows-11/2026/07/july-14-2026-kb5099414-os-build-22631-7376)
