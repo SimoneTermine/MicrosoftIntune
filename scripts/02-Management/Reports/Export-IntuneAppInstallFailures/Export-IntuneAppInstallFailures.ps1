@@ -7,7 +7,7 @@
 
 .DESCRIPTION
     Uses Microsoft Graph Intune reporting and filters OrgDeviceInstallStatus
-    for failed or error installation states. This is a read-only report.
+    for failed and uninstall-failed enum values without depending on display-language text. This is a read-only report.
 #>
 [CmdletBinding()]
 param(
@@ -28,7 +28,7 @@ function Connect-IntuneGraph {
 function Export-IntuneReport {
     param([string]$ReportName, [string[]]$Columns)
     $uri = 'https://graph.microsoft.com/beta/deviceManagement/reports/exportJobs'
-    $body = @{ reportName = $ReportName; format = 'csv'; localizationType = 'ReplaceLocalizableValues'; select = $Columns }
+    $body = @{ reportName = $ReportName; format = 'csv'; localizationType = 'LocalizedValuesAsAdditionalColumn'; select = $Columns }
     $job = Invoke-MgGraphRequest -Method POST -Uri $uri -Body ($body | ConvertTo-Json -Depth 6) -ContentType 'application/json'
     if (-not $job.id) { throw 'Microsoft Graph did not return an export job identifier.' }
     $statusUri = "$uri('$([uri]::EscapeDataString([string]$job.id))')"
@@ -67,7 +67,14 @@ try {
     try {
         $allRows = @(Import-Csv -LiteralPath $export.CsvPath)
         if ($IncludeAllStatuses) { $rows = $allRows }
-        else { $rows = @($allRows | Where-Object { [string]$_.InstallState -match '(?i)fail|error' }) }
+        else {
+            # InstallState is the locale-independent enum column; _loc columns are display strings.
+            # Graph's installState enum uses 2 for failed and 4 for uninstallFailed.
+            $rows = @($allRows | Where-Object {
+                ([string]$_.InstallState -match '^(2|4)$') -or
+                ([string]$_.InstallState -match '(?i)^(failed|uninstallFailed)$')
+            })
+        }
         $fullPath = [IO.Path]::GetFullPath($OutputPath)
         $parent = Split-Path -Parent $fullPath
         if ($parent -and -not (Test-Path -LiteralPath $parent)) { New-Item -Path $parent -ItemType Directory -Force | Out-Null }
