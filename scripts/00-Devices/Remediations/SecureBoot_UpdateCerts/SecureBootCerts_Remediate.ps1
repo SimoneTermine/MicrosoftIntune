@@ -1,3 +1,5 @@
+# Author: Simone Termine
+# Blog: https://www.endpointninja.com
 # Remediation - Secure Boot CA 2023 rollout (AvailableUpdates=0x5944) with in-progress guardrails
 # Runs as SYSTEM in Intune Proactive Remediations
 
