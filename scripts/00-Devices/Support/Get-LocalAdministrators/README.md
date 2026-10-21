@@ -6,11 +6,11 @@ Get-LocalAdministrators.ps1 inventories members of the built-in Windows local Ad
 
 Run from 64-bit PowerShell on Windows:
 
-    .Get-LocalAdministrators.ps1
+    ./Get-LocalAdministrators.ps1
 
 To save the result as CSV:
 
-    .Get-LocalAdministrators.ps1 -CsvPath C:ReportsLocalAdministrators.csv
+    ./Get-LocalAdministrators.ps1 -CsvPath C:/Reports/LocalAdministrators.csv
 
 The CSV includes the computer name, localized group name, member name, object class, principal source, and SID.
 

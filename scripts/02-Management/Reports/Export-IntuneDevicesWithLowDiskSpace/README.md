@@ -18,11 +18,11 @@ The script prompts for Microsoft Graph sign-in when no Graph context is already 
 
 ## Run the report
 
-    .Export-IntuneDevicesWithLowDiskSpace.ps1
+    ./Export-IntuneDevicesWithLowDiskSpace.ps1
 
 Use a different free-space threshold and save to a chosen path:
 
-    .Export-IntuneDevicesWithLowDiskSpace.ps1 -MinimumFreeSpaceGB 15 -OutputPath C:ReportsIntune-LowDiskSpace.csv
+    ./Export-IntuneDevicesWithLowDiskSpace.ps1 -MinimumFreeSpaceGB 15 -OutputPath C:/Reports/Intune-LowDiskSpace.csv
 
 The script follows Graph pagination and reads all managed devices. It only exports Windows devices and makes no changes to Intune or the endpoints.
 
