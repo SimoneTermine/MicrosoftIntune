@@ -1,6 +1,6 @@
 # Export Intune app installation failures by device
 
-Use this read-only PowerShell report to investigate Microsoft Intune app installation failures. It exports device-level app installation status from Microsoft Graph, then filters the report for failed or error states. The CSV includes app ID and version, device name and ID, installation state and detail, error code, last modified time, and user information when available.
+Use this read-only PowerShell report to investigate Microsoft Intune app installation failures. It exports device-level app installation status from Microsoft Graph, then filters the locale-independent `InstallState` enum for failed (`2`) and uninstall failed (`4`) statuses. The export also retains localized display text in companion columns when Intune provides them. The CSV includes app ID and version, device name and ID, installation state and detail, error code, last modified time, and user information when available.
 
 The Intune app install failure report helps endpoint administrators identify which devices failed an app deployment and compare returned error codes across the fleet.
 
@@ -35,9 +35,10 @@ The script requests the OrgDeviceInstallStatus report from the Intune Graph expo
 - Intune report data can lag behind a device’s current state.
 - It uses device-level installation status. Review the Intune admin center and client logs before changing deployments.
 - The CSV may contain user principal names, device identifiers, app deployment details, and error codes. Handle it as operational data.
-- The report uses the Microsoft Graph beta export endpoint, which Microsoft may change.
+- The report uses the Microsoft Graph beta export endpoint. The `OrgDeviceInstallStatus` report and its columns are controlled by Intune and can change.
 
 ## References
 
 - [Intune reports and properties available using Microsoft Graph](https://learn.microsoft.com/en-us/intune/device-management/reports/ref-graph-available-reports)
 - [Export Intune reports using Microsoft Graph APIs](https://learn.microsoft.com/en-us/intune/device-management/reports/export-graph-apis)
+- [Microsoft Graph installState enum](https://learn.microsoft.com/en-us/graph/api/resources/intune-books-installstate?view=graph-rest-1.0)
