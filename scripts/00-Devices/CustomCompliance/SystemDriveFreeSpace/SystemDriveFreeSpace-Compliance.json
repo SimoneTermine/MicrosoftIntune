@@ -1,0 +1,42 @@
+{
+  "Rules": [
+    {
+      "SettingName": "SystemDriveFreeSpaceGiB",
+      "Operator": "GreaterEquals",
+      "DataType": "Double",
+      "Operand": 15,
+      "MoreInfoUrl": "https://learn.microsoft.com/mem/intune/protect/device-compliance-get-started",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Low free space on the Windows system drive",
+          "Description": "Free at least 15 GiB on the Windows system drive, then sync the device with Intune. Contact IT if you need help identifying files that can be removed."
+        },
+        {
+          "Language": "it_IT",
+          "Title": "Spazio libero insufficiente nell'unità di sistema Windows",
+          "Description": "Libera almeno 15 GiB nell'unità di sistema Windows e sincronizza il dispositivo con Intune. Contatta l'IT se hai bisogno di aiuto per individuare i file rimovibili."
+        }
+      ]
+    },
+    {
+      "SettingName": "QuerySucceeded",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "MoreInfoUrl": "https://learn.microsoft.com/mem/intune/protect/device-compliance-get-started",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Unable to read system drive free space",
+          "Description": "Intune could not read the free space on the Windows system drive. Sync the device and contact IT if the issue continues."
+        },
+        {
+          "Language": "it_IT",
+          "Title": "Impossibile leggere lo spazio libero dell'unità di sistema",
+          "Description": "Intune non è riuscito a leggere lo spazio libero nell'unità di sistema Windows. Sincronizza il dispositivo e contatta l'IT se il problema persiste."
+        }
+      ]
+    }
+  ]
+}
