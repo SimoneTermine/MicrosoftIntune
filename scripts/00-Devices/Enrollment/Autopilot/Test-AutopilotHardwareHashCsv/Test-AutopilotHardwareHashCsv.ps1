@@ -6,8 +6,9 @@
     Blog: https://www.endpointninja.com
 
 .DESCRIPTION
-    Checks required headers, blank and duplicate serial numbers, and Base64
-    hardware hash values. The validation report never includes the hash.
+    Checks the documented five-column header, manual-import row limit, CSV
+    format, serial numbers, duplicate hardware hashes, and Base64 values. The
+    validation report never includes the hardware hash or its digest.
 #>
 [CmdletBinding()]
 param(
@@ -25,22 +26,52 @@ try {
     $resolvedOutput = [IO.Path]::GetFullPath($OutputPath)
     if ($resolvedOutput -eq [IO.Path]::GetFullPath($inputPath)) { throw 'The report cannot overwrite the source CSV.' }
 
-    $rows = @(Import-Csv -LiteralPath $inputPath)
-    if ($rows.Count -eq 0) { throw 'The CSV contains no device rows.' }
-    $headers = @($rows[0].PSObject.Properties.Name)
-    foreach ($requiredHeader in @('Device Serial Number', 'Hardware Hash')) {
-        if ($headers -notcontains $requiredHeader) { throw "Required CSV column is missing: $requiredHeader" }
+    $rawContent = Get-Content -LiteralPath $inputPath -Raw
+    if ($rawContent.Contains('"')) { throw 'Quotation marks are not allowed in the Autopilot import CSV.' }
+
+    $expectedHeader = 'Device Serial Number,Windows Product ID,Hardware Hash,Group Tag,Assigned User'
+    $lines = @($rawContent -split "`r?`n")
+    if ($lines.Count -eq 0 -or $lines[0] -cne $expectedHeader) {
+        throw "The CSV header must exactly match: $expectedHeader"
     }
 
+    $dataLines = @($lines | Select-Object -Skip 1 | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($dataLines.Count -eq 0) { throw 'The CSV contains no device rows.' }
+    if ($dataLines.Count -gt 500) { throw 'The manual Windows Autopilot CSV import supports a maximum of 500 device rows.' }
+    foreach ($line in $dataLines) {
+        if ($line.Split(',').Count -ne 5) { throw 'Each device row must contain exactly five comma-separated fields.' }
+    }
+
+    $rows = @(Import-Csv -LiteralPath $inputPath)
+    if ($rows.Count -ne $dataLines.Count) { throw 'The number of parsed CSV records does not match the validated data rows.' }
+
     $serialCounts = @{}
-    foreach ($row in $rows) {
-        $serial = ([string]$row.'Device Serial Number').Trim()
-        if ($serial) {
-            $key = $serial.ToUpperInvariant()
-            if (-not $serialCounts.ContainsKey($key)) { $serialCounts[$key] = 0 }
-            $serialCounts[$key]++
+    $hashCounts = @{}
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        foreach ($row in $rows) {
+            $serial = ([string]$row.'Device Serial Number').Trim()
+            if ($serial) {
+                $key = $serial.ToUpperInvariant()
+                if (-not $serialCounts.ContainsKey($key)) { $serialCounts[$key] = 0 }
+                $serialCounts[$key]++
+            }
+
+            $hash = ([string]$row.'Hardware Hash').Trim()
+            if ($hash) {
+                try {
+                    $decodedHash = [Convert]::FromBase64String($hash)
+                    if ($decodedHash.Length -gt 0) {
+                        $digest = [BitConverter]::ToString($sha256.ComputeHash($decodedHash)).Replace('-', '')
+                        if (-not $hashCounts.ContainsKey($digest)) { $hashCounts[$digest] = 0 }
+                        $hashCounts[$digest]++
+                    }
+                }
+                catch { }
+            }
         }
     }
+    finally { $sha256.Dispose() }
 
     $results = for ($index = 0; $index -lt $rows.Count; $index++) {
         $row = $rows[$index]
@@ -55,6 +86,12 @@ try {
             try {
                 $decoded = [Convert]::FromBase64String($hash)
                 if ($decoded.Length -eq 0) { $issues.Add('Hardware Hash decodes to an empty value.') }
+                else {
+                    $sha = [System.Security.Cryptography.SHA256]::Create()
+                    try { $digest = [BitConverter]::ToString($sha.ComputeHash($decoded)).Replace('-', '') }
+                    finally { $sha.Dispose() }
+                    if ($hashCounts[$digest] -gt 1) { $issues.Add('Duplicate Hardware Hash.') }
+                }
             }
             catch { $issues.Add('Hardware Hash is not valid Base64.') }
         }
