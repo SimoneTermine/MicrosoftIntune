@@ -1,17 +1,17 @@
-# Normalize line endings
+#Normalize line endings
 * text=auto
 
-# PowerShell scripts: keep Windows-friendly line endings
+#PowerShell scripts: keep Windows-friendly line endings
 *.ps1  text eol=crlf
 *.psm1 text eol=crlf
 *.psd1 text eol=crlf
 
-# Markdown/docs: LF is usually nicer cross-platform
+#Markdown/docs: LF is usually nicer cross-platform
 *.md   text eol=lf
 *.yml  text eol=lf
 *.yaml text eol=lf
 
-# Binary files (no text normalization)
+#Binary files (no text normalization)
 *.png binary
 *.jpg binary
 *.jpeg binary
