@@ -25,9 +25,13 @@ try {
     }
 
     $sessionManagerPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager'
-    $pendingRename = (Get-ItemProperty -LiteralPath $sessionManagerPath -Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations
-    if ($pendingRename -and $pendingRename.Count -gt 0) {
-        $reasons.Add('Windows has pending file rename operations')
+    $sessionManagerProperties = Get-ItemProperty -LiteralPath $sessionManagerPath -ErrorAction Stop
+    $pendingRenameProperty = $sessionManagerProperties.PSObject.Properties['PendingFileRenameOperations']
+    if ($pendingRenameProperty) {
+        $pendingRename = $pendingRenameProperty.Value
+        if ($pendingRename -and $pendingRename.Count -gt 0) {
+            $reasons.Add('Windows has pending file rename operations')
+        }
     }
 
     if ($reasons.Count -gt 0) {
