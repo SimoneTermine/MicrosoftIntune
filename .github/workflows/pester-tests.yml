@@ -17,7 +17,7 @@ jobs:
     steps:
       # Check out the repository so the test file and scripts are available.
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Use the Windows PowerShell 5.1 executable provided by the runner.
       - name: Verify Windows PowerShell 5.1
