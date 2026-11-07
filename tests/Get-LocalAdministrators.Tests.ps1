@@ -75,6 +75,17 @@ Describe 'Get-LocalAdministrators.ps1' {
         $result.Count | Should -Be 0
     }
 
+    It 'calls both local group cmdlets once with the well-known Administrators SID' {
+        & $script:scriptPath | Out-Null
+
+        Should -Invoke Get-LocalGroup -Exactly -Times 1 -ParameterFilter {
+            "$SID" -eq 'S-1-5-32-544'
+        }
+        Should -Invoke Get-LocalGroupMember -Exactly -Times 1 -ParameterFilter {
+            "$SID" -eq 'S-1-5-32-544'
+        }
+    }
+
     It 'exports member rows to CSV and creates a missing parent directory' {
         $csvPath = Join-Path $TestDrive 'reports\administrators.csv'
 
